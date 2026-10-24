@@ -1,0 +1,8 @@
+{
+  "name": "LIFX Switch Backlight",
+  "homeassistant": "2026.10.2",
+  "country": [
+    "US",
+    "CA"
+  ]
+}

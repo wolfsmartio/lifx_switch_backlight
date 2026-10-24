@@ -1,0 +1,17 @@
+{
+  "entity": {
+    "light": {
+      "backlight_on": { "default": "mdi:gesture-tap-button" },
+      "backlight_off": { "default": "mdi:gesture-tap-button" }
+    },
+    "number": {
+      "haptic_duration": { "default": "mdi:vibrate" }
+    },
+    "switch": {
+      "keep_applied": { "default": "mdi:lock-check", "state": { "off": "mdi:lock-open-variant" } }
+    }
+  },
+  "services": {
+    "set_backlight": { "service": "mdi:palette" }
+  }
+}
