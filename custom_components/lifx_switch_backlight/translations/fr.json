@@ -1,0 +1,71 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "LIFX Switch Backlight",
+        "description": "Des LIFX Switch ont été trouvés sur votre réseau.",
+        "menu_options": {
+          "pick": "Choisir un interrupteur trouvé",
+          "manual": "Saisir une adresse IP"
+        }
+      },
+      "pick": {
+        "title": "Choisir un LIFX Switch",
+        "data": { "device": "Interrupteur" }
+      },
+      "manual": {
+        "title": "Ajouter un LIFX Switch",
+        "description": "Aucun nouvel interrupteur n'a été trouvé automatiquement. Saisissez son adresse IP.",
+        "data": { "host": "Adresse IP" },
+        "data_description": {
+          "host": "Attribuez à l'interrupteur une adresse IP fixe dans votre routeur pour qu'il soit toujours trouvé à la même adresse."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Aucun appareil LIFX n'a répondu à cette adresse.",
+      "not_a_switch": "Cet appareil LIFX n'est pas un interrupteur (il n'a pas de réglages de rétroéclairage)."
+    },
+    "abort": {
+      "already_configured": "Cet interrupteur est déjà configuré."
+    }
+  },
+  "entity": {
+    "light": {
+      "backlight_on": { "name": "Rétroéclairage allumé" },
+      "backlight_off": { "name": "Rétroéclairage éteint" }
+    },
+    "number": {
+      "haptic_duration": { "name": "Retour haptique" }
+    },
+    "switch": {
+      "keep_applied": { "name": "Maintenir les réglages" }
+    }
+  },
+  "exceptions": {
+    "communication_error": {
+      "message": "Impossible de joindre le LIFX Switch à l'adresse {host}."
+    },
+    "device_not_found": {
+      "message": "L'appareil {device_id} n'est pas un LIFX Switch chargé."
+    }
+  },
+  "services": {
+    "set_backlight": {
+      "name": "Définir le rétroéclairage",
+      "description": "Définit les couleurs de rétroéclairage et le retour haptique d'un ou plusieurs LIFX Switch. Les champs non renseignés conservent leur valeur actuelle.",
+      "fields": {
+        "device_id": { "name": "Interrupteur", "description": "Les LIFX Switch à mettre à jour." },
+        "haptic_duration_ms": { "name": "Retour haptique", "description": "Durée de vibration de chaque bouton lorsqu'on appuie dessus. 0 le désactive." },
+        "on_hue": { "name": "Couleur allumé : teinte", "description": "Teinte du rétroéclairage lorsque la charge est allumée." },
+        "on_saturation": { "name": "Couleur allumé : saturation", "description": "Saturation du rétroéclairage lorsque la charge est allumée. 0 donne du blanc à la température de couleur choisie." },
+        "on_brightness": { "name": "Couleur allumé : luminosité", "description": "Luminosité du rétroéclairage lorsque la charge est allumée." },
+        "on_kelvin": { "name": "Couleur allumé : température de couleur", "description": "Température de couleur du rétroéclairage lorsque la charge est allumée." },
+        "off_hue": { "name": "Couleur éteint : teinte", "description": "Teinte du rétroéclairage lorsque la charge est éteinte." },
+        "off_saturation": { "name": "Couleur éteint : saturation", "description": "Saturation du rétroéclairage lorsque la charge est éteinte. 0 donne du blanc à la température de couleur choisie." },
+        "off_brightness": { "name": "Couleur éteint : luminosité", "description": "Luminosité du rétroéclairage lorsque la charge est éteinte." },
+        "off_kelvin": { "name": "Couleur éteint : température de couleur", "description": "Température de couleur du rétroéclairage lorsque la charge est éteinte." }
+      }
+    }
+  }
+}

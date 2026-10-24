@@ -1,0 +1,90 @@
+set_backlight:
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          multiple: true
+          filter:
+            - integration: lifx_switch_backlight
+    haptic_duration_ms:
+      example: 30
+      selector:
+        number:
+          min: 0
+          max: 500
+          step: 10
+          unit_of_measurement: ms
+          mode: box
+    on_hue:
+      example: 240
+      selector:
+        number:
+          min: 0
+          max: 360
+          step: 1
+          unit_of_measurement: "°"
+          mode: slider
+    on_saturation:
+      example: 100
+      selector:
+        number:
+          min: 0
+          max: 100
+          step: 1
+          unit_of_measurement: "%"
+          mode: slider
+    on_brightness:
+      example: 100
+      selector:
+        number:
+          min: 0
+          max: 100
+          step: 1
+          unit_of_measurement: "%"
+          mode: slider
+    on_kelvin:
+      example: 3500
+      selector:
+        number:
+          min: 1500
+          max: 9000
+          step: 100
+          unit_of_measurement: "K"
+          mode: box
+    off_hue:
+      example: 0
+      selector:
+        number:
+          min: 0
+          max: 360
+          step: 1
+          unit_of_measurement: "°"
+          mode: slider
+    off_saturation:
+      example: 100
+      selector:
+        number:
+          min: 0
+          max: 100
+          step: 1
+          unit_of_measurement: "%"
+          mode: slider
+    off_brightness:
+      example: 100
+      selector:
+        number:
+          min: 0
+          max: 100
+          step: 1
+          unit_of_measurement: "%"
+          mode: slider
+    off_kelvin:
+      example: 2700
+      selector:
+        number:
+          min: 1500
+          max: 9000
+          step: 100
+          unit_of_measurement: "K"
+          mode: box
