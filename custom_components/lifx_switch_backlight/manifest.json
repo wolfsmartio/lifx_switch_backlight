@@ -1,10 +1,6 @@
 {
   "domain": "lifx_switch_backlight",
   "name": "LIFX Switch Backlight",
-  "categories": [
-    "plugs_switches",
-    "lighting"
-  ],
   "codeowners": [
     "@wolfsmartio"
   ],
