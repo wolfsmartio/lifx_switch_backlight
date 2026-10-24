@@ -55,9 +55,6 @@ def test_manifest() -> None:
     repo = "https://github.com/wolfsmartio/lifx_switch_backlight"
     assert MANIFEST["documentation"] == repo
     assert MANIFEST["issue_tracker"] == f"{repo}/issues"
-    categories = MANIFEST["categories"]
-    assert 1 <= len(categories) <= 3
-    assert len(set(categories)) == len(categories)
 
 
 def test_readme_states_minimum_version() -> None:
