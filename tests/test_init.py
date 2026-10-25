@@ -7,6 +7,7 @@ from unittest.mock import AsyncMock, patch
 from freezegun.api import FrozenDateTimeFactory
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry, async_fire_time_changed
+import voluptuous as vol
 
 from homeassistant import config_entries
 from homeassistant.config_entries import ConfigEntryState
@@ -163,6 +164,34 @@ async def test_set_backlight_action(hass: HomeAssistant, mock_switch: AsyncMock)
         await hass.services.async_call(
             DOMAIN, "set_backlight", {"device_id": "nope", "on_hue": 1}, blocking=True
         )
+
+async def test_set_backlight_color_picker_and_white(
+    hass: HomeAssistant, mock_switch: AsyncMock
+) -> None:
+    entry = await _setup(hass)
+    device = dr.async_get(hass).async_get_device_by_identifier((DOMAIN, SERIAL), entry.entry_id)
+    await hass.services.async_call(
+        DOMAIN,
+        "set_backlight",
+        {
+            "device_id": device.id,
+            "on_rgb_color": [0, 0, 255],
+            "off_color_temp_kelvin": 2700,
+        },
+        blocking=True,
+    )
+    state = mock_switch.state
+    assert state.on == INITIAL.on.updated(hue_deg=240, saturation_pct=100)
+    assert state.off == INITIAL.off.updated(saturation_pct=0, kelvin=2700)
+
+    with pytest.raises(vol.Invalid):
+        await hass.services.async_call(
+            DOMAIN,
+            "set_backlight",
+            {"device_id": device.id, "on_rgb_color": [0, 0, 255], "on_color_temp_kelvin": 2700},
+            blocking=True,
+        )
+
 
 
 async def test_drift_is_reapplied(
