@@ -96,6 +96,19 @@ data:
   off_kelvin: 2700
 ```
 
+Prefer pickers over numbers? Use `on_rgb_color` and `off_rgb_color` for a color picker, and `on_color_temp_kelvin` and `off_color_temp_kelvin` for a warm-to-cold white slider. The picker sets hue and saturation only, so set brightness separately. The white slider sets the color temperature and zero saturation.
+
+```yaml
+action: lifx_switch_backlight.set_backlight
+data:
+  device_id:
+    - 0123456789abcdef0123456789abcdef
+  on_rgb_color: [0, 80, 255]
+  off_color_temp_kelvin: 2700
+```
+
+For each side, give either the picker or the white slider, not both. The hue, saturation and kelvin fields still work and take priority over the pickers if you set both.
+
 Set saturation to 0 for a white backlight at the given color temperature.
 
 ## Moving from the AppDaemon app and blueprint

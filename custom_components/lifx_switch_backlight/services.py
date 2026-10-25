@@ -11,6 +11,7 @@ from homeassistant.const import ATTR_DEVICE_ID
 from homeassistant.core import HomeAssistant, ServiceCall, callback
 from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers import config_validation as cv, device_registry as dr
+from homeassistant.util.color import color_RGB_to_hs
 
 from .const import DOMAIN, MAX_HAPTIC_MS, MAX_KELVIN, MIN_KELVIN
 from .coordinator import LifxSwitchCoordinator
@@ -19,13 +20,18 @@ from .protocol import ButtonConfig
 SERVICE_SET_BACKLIGHT = "set_backlight"
 ATTR_HAPTIC_DURATION_MS = "haptic_duration_ms"
 
+ATTR_RGB_COLOR = "rgb_color"
+ATTR_COLOR_TEMP_KELVIN = "color_temp_kelvin"
+
+_KELVIN = vol.All(vol.Coerce(int), vol.Range(min=MIN_KELVIN, max=MAX_KELVIN))
 _PERCENT = vol.All(vol.Coerce(float), vol.Range(min=0, max=100))
 _COLOR_FIELDS = {
     "hue": vol.All(vol.Coerce(float), vol.Range(min=0, max=360)),
     "saturation": _PERCENT,
     "brightness": _PERCENT,
-    "kelvin": vol.All(vol.Coerce(int), vol.Range(min=MIN_KELVIN, max=MAX_KELVIN)),
+    "kelvin": _KELVIN,
 }
+_RGB = vol.All(vol.ExactSequence((cv.byte,) * 3), vol.Coerce(tuple))
 
 SET_BACKLIGHT_SCHEMA = vol.Schema(
     {
@@ -37,6 +43,15 @@ SET_BACKLIGHT_SCHEMA = vol.Schema(
             vol.Optional(f"{side}_{field}"): validator
             for side in ("on", "off")
             for field, validator in _COLOR_FIELDS.items()
+        },
+        # The color picker and the white slider are two ways to set the same color.
+        **{
+            vol.Exclusive(f"{side}_{field}", f"{side}_color"): validator
+            for side in ("on", "off")
+            for field, validator in (
+                (ATTR_RGB_COLOR, _RGB),
+                (ATTR_COLOR_TEMP_KELVIN, _KELVIN),
+            )
         },
     }
 )
@@ -64,11 +79,23 @@ def _merge(config: ButtonConfig, data: dict) -> ButtonConfig:
     """Apply only the fields given in the action call."""
     colors = {}
     for side in ("on", "off"):
+        hue = data.get(f"{side}_hue")
+        saturation = data.get(f"{side}_saturation")
+        kelvin = data.get(f"{side}_kelvin")
+        # The picker sets hue and saturation, the white slider sets kelvin and
+        # zero saturation. Explicit hue, saturation and kelvin fields still win.
+        if (rgb := data.get(f"{side}_{ATTR_RGB_COLOR}")) is not None:
+            picked_hue, picked_saturation = color_RGB_to_hs(*rgb)
+            hue = picked_hue if hue is None else hue
+            saturation = picked_saturation if saturation is None else saturation
+        if (temp := data.get(f"{side}_{ATTR_COLOR_TEMP_KELVIN}")) is not None:
+            kelvin = temp if kelvin is None else kelvin
+            saturation = 0 if saturation is None else saturation
         colors[side] = getattr(config, side).updated(
-            hue_deg=data.get(f"{side}_hue"),
-            saturation_pct=data.get(f"{side}_saturation"),
+            hue_deg=hue,
+            saturation_pct=saturation,
             brightness_pct=data.get(f"{side}_brightness"),
-            kelvin=data.get(f"{side}_kelvin"),
+            kelvin=kelvin,
         )
     return ButtonConfig(
         data.get(ATTR_HAPTIC_DURATION_MS, config.haptic_duration_ms), colors["on"], colors["off"]

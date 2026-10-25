@@ -16,6 +16,17 @@ set_backlight:
           step: 10
           unit_of_measurement: ms
           mode: box
+    on_rgb_color:
+      example: [0, 80, 255]
+      selector:
+        color_rgb:
+    on_color_temp_kelvin:
+      example: 2700
+      selector:
+        color_temp:
+          unit: kelvin
+          min: 1500
+          max: 9000
     on_hue:
       example: 240
       selector:
@@ -52,6 +63,17 @@ set_backlight:
           step: 100
           unit_of_measurement: "K"
           mode: box
+    off_rgb_color:
+      example: [0, 80, 255]
+      selector:
+        color_rgb:
+    off_color_temp_kelvin:
+      example: 2700
+      selector:
+        color_temp:
+          unit: kelvin
+          min: 1500
+          max: 9000
     off_hue:
       example: 0
       selector:
